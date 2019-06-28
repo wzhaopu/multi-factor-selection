@@ -9,7 +9,7 @@ import tensorflow as tf
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 # Set to INFO for tracking training, default is WARN
-
+from tensorflow.contrib.learn.python.learn.datasets import base
 print("Using TensorFlow version %s" % (tf.__version__))
 
 CATEGORICAL_COLUMNS = ['exchangeCD','ListSectorCD']
@@ -135,6 +135,7 @@ def generate_input_fn(filename, batch_size=BATCH_SIZE):
         features = all_columns
 
 
+
         # Sparse categorical features must be represented with an additional dimension.
         # There is no additional work needed for the Continuous columns; they are the unaltered columns.
         # See docs for tf.SparseTensor for more info
@@ -155,7 +156,7 @@ print('input function configured')
 
 exchangeCD = tf.contrib.layers.sparse_column_with_keys(column_name="exchangeCD",
                                                  keys=["XSHE", "XSHG"])
-listSectorCD = tf.contrib.layers.sparse_column_with_keys(column_name="listSectorCD",
+ListSectorCD = tf.contrib.layers.sparse_column_with_keys(column_name="ListSectorCD",
                                                  keys=["1","2","3","4"])
 
 print('Sparse columns configured')
@@ -180,12 +181,12 @@ country_occupation = tf.contrib.layers.crossed_column([native_country, occupatio
 print('TODO: Transformations incomplete')
 
 # Wide columns and deep columns.
-wide_columns = [exchangeCD, listSectorCD]
-deep_columns = [listSectorCD]
+wide_columns = [exchangeCD, ListSectorCD]
+deep_columns = [ListSectorCD]
 
 for col in NUMERICAL_COLUMNS:
     wide_columns.append(numerical_dict[col])
-    deep_columns.append(tf.layers.embedding_column(numerical_dict[col]))
+    deep_columns.append(numerical_dict[col])
 
 print('wide and deep columns configured')
 
