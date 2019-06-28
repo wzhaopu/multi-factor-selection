@@ -125,3 +125,49 @@ def generate_input_fn(filename, batch_size=BATCH_SIZE):
     return _input_fn
 
 print('input function configured')
+
+# Sparse base columns.
+
+exchangeCD = tf.contrib.layers.sparse_column_with_keys(column_name="exchangeCD",
+                                                 keys=["", "male"])
+race = tf.contrib.layers.sparse_column_with_keys(column_name="race",
+                                               keys=["Amer-Indian-Eskimo",
+                                                     "Asian-Pac-Islander",
+                                                     "Black", "Other",
+                                                     "White"])
+
+education = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "education", hash_bucket_size=1000)
+marital_status = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "marital_status", hash_bucket_size=100)
+relationship = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "relationship", hash_bucket_size=100)
+workclass = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "workclass", hash_bucket_size=100)
+occupation = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "occupation", hash_bucket_size=1000)
+native_country = tf.contrib.layers.sparse_column_with_hash_bucket(
+  "native_country", hash_bucket_size=1000)
+
+print('Sparse columns configured')
+
+# Continuous base columns.
+'exchangeCD','ListSectorCD'
+exchangeCD = tf.contrib.layers.real_valued_column("exchangeCD")
+education_num = tf.contrib.layers.real_valued_column("education_num")
+capital_gain = tf.contrib.layers.real_valued_column("capital_gain")
+
+
+print('continuous columns configured')
+
+# Transformations.
+age_buckets = tf.contrib.layers.bucketized_column(age,
+            boundaries=[ 18, 25, 30, 35, 40, 45, 50, 55, 60, 65 ])
+education_occupation = tf.contrib.layers.crossed_column([education, occupation],
+                                                        hash_bucket_size=int(1e4))
+age_race_occupation = tf.contrib.layers.crossed_column([age_buckets, race, occupation],
+                                                       hash_bucket_size=int(1e6))
+country_occupation = tf.contrib.layers.crossed_column([native_country, occupation],
+                                                      hash_bucket_size=int(1e4))
+
+print('Transformations complete')
