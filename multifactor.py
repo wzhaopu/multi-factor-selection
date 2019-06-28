@@ -230,8 +230,8 @@ def get_model(model_type, new_model=True, model_dir=None):
 
 m, model_dir = get_model(model_type='WIDE_AND_DEEP')
 
-train_file = "adult.data.csv" # "gs://cloudml-public/census/data/adult.data.csv"
-test_file  = "adult.test.csv" # "gs://cloudml-public/census/data/adult.test.csv"
+train_file = "factor_train.csv" # "gs://cloudml-public/census/data/adult.data.csv"
+test_file  = "factor_test.csv" # "gs://cloudml-public/census/data/adult.test.csv"
 
 
 train_steps = 1000
@@ -240,7 +240,7 @@ m.fit(input_fn=generate_input_fn(train_file, BATCH_SIZE), steps=train_steps)
 
 print('fit done')
 
-esults = m.evaluate(input_fn=generate_input_fn(test_file), steps=100)
+results = m.evaluate(input_fn=generate_input_fn(test_file), steps=100)
 print('evaluate done')
 
 print('Accuracy: %s' % results['accuracy'])
