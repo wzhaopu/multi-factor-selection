@@ -7,10 +7,9 @@ def get_scores(y, pred, n_bins=100, bins=None, bins_name='Ad', name='',
     assert len(y)==len(pred)
     n = len(y)
     mse = mean_squared_error(y, pred)
-    loss = log_loss(y, pred)
-    auc = roc_auc_score(y, pred)
-    ans =  {'loss': np.round(loss, 8), 
-            'AUC': np.round(auc, 8),
+    #loss = log_loss(y, pred)
+    #auc = roc_auc_score(y, pred)
+    ans =  {
             'MSE': np.round(mse, 8)}
     if bins is not None:
         pred_in_bins = np.array(pd.Series(bins).astype('category').cat.codes)

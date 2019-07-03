@@ -37,8 +37,8 @@ class Model(object):
             for col in columns:
                 if col in nb_words and col not in maxlen_dict:
                     # categorical feature
-                    dev = '/cpu:0' if nb_words[col]>400000 else "/device:GPU:0"
-                    with tf.device(dev):
+                    #dev = '/cpu:0' if nb_words[col]>400000 else "/device:GPU:0"
+                    #with tf.device(dev):
                         # inputs[col]: shape (batch_size x 1) -> (batch_size)
                         inputs[col] = tf.placeholder(tf.int32, [None])
                         # table: shape (number_of_words, embedding_size)
@@ -189,7 +189,7 @@ class Model(object):
             latent = get_latent(embs, lr_w, **kwargs)
             latent = dropout(latent, dropout_rate, training=dropout_on)
             logit = tf.layers.dense(latent, 1, name='last_fc', kernel_initializer=tf.initializers.he_uniform())
-            return tf.nn.sigmoid(logit), logit
+            return logit, logit
         with tf.variable_scope("model"):
             # build placeholders for inputs
             inputs, embs, lr_weights = get_embeddings()
@@ -200,7 +200,7 @@ class Model(object):
             optimizer = tf.train.AdamOptimizer(lr_now)
             yhat, logit = build_model(embs, lr_weights, dropout_on)
             emb_reg_loss = tf.nn.l2_loss(embs) + tf.nn.l2_loss(lr_weights)
-            pred_loss = tf.losses.log_loss(label, yhat)
+            pred_loss = tf.nn.l2_loss(label-yhat)
             loss = pred_loss + reg_lambda*emb_reg_loss 
             gvs = optimizer.compute_gradients(loss)
             
